@@ -2,6 +2,9 @@
   description = "Мой фембой сетап нв NixOS nya~~";
 
   inputs = {
+    # Flake exts
+    flake-parts.url = "github:hercules-ci/flake-parts";
+
     # Nix pkgs
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
@@ -36,9 +39,17 @@
     #   inputs.home-manager.follows = "home-manager";
     # };
   };
-  outputs = { nixpkgs, ... }@inputs: let
+  outputs =
+    { flake-parts, ... }@inputs:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = inputs.nixpkgs.lib.systems.flakeExposed;
+      flake = rec {
+        configuration = import ./configuration;
 
-  in rec {
-    
-  };
+        nixosConfigurations = import "${configuration.path}/machines" {
+          inherit inputs;
+          flake = self;
+        };
+      };
+    };
 }
