@@ -1,4 +1,8 @@
-{ inputs, flake, ... }:
+{
+  inputs,
+  flake,
+  ...
+}:
 let
   lib = inputs.nixpkgs.lib;
 in

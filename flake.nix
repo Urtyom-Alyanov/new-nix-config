@@ -40,14 +40,22 @@
     # };
   };
   outputs =
-    { flake-parts, ... }@inputs:
+    { self, flake-parts, ... }@inputs:
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = inputs.nixpkgs.lib.systems.flakeExposed;
       flake = rec {
         configuration = import ./configuration;
 
+        lib = inputs.nixpkgs.lib.extend (
+          _: _:
+          import ./lib {
+            inputs = inputs;
+            flake = self;
+          }
+        );
+
         nixosConfigurations = import "${configuration.path}/machines" {
-          inherit inputs;
+          inherit inputs lib;
           flake = self;
         };
       };

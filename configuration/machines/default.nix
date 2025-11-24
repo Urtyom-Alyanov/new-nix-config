@@ -23,7 +23,10 @@ let
               name = "${machine}.${arch}";
               value = lib.mkMachine (
                 let
-                  config = import configPath { inherit inputs flake; };
+                  config = import configPath {
+                    inherit inputs flake lib;
+                    machinePath = "${archDir}/${machine}";
+                  };
                 in
                 config
                 // {
