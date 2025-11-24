@@ -1,4 +1,8 @@
-{ lib, flake }:
+{
+  lib,
+  flake,
+  inputs,
+}:
 let
   availableArchitectures = lib.getAvailableArchitectures "${flake.configuration.path}/machines";
 
@@ -9,7 +13,12 @@ let
       machines = builtins.attrNames (builtins.readDir archDir);
 
       buildMachine =
-        
+        machine:
+        let
+          configPath = "${archDir}/${machine}/default.nix";
+        in
+        if lib.pathExists configPath then
+          [
             {
               name = "${machine}.${arch}";
               value = lib.mkMachine (
