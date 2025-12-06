@@ -32,6 +32,8 @@
       url = "github:Urtyom-Alyanov/loginom-community-package";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    agenix.url = "github:ryantm/agenix";
+    agenix.inputs.nixpkgs.follows = "nixpkgs";
 
     # plasma-manager = {
     #   url = "github:nix-community/plasma-manager";
@@ -43,6 +45,7 @@
     { self, flake-parts, ... }@inputs:
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = inputs.nixpkgs.lib.systems.flakeExposed;
+
       flake = rec {
         configuration = import ./configuration;
 

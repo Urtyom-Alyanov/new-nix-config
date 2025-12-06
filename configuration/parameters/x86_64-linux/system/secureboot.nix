@@ -41,13 +41,13 @@ in
 
   config = mkIf cfg.enable {
     boot.loader.systemd-boot.extraInstallCommands = ''
-      ${mkIf opts.createKeys ''
+      ${mkIf cfg.createKeys ''
         if [ "$(${pkgs.sbctl}/bin/sbctl status --json | ${pkgs.jq}/bin/jq -r '.installed')" = "false" ]; then
                   ${pkgs.sbctl}/bin/sbctl create-keys
                 fi''}
-      ${mkIf opts.enrollKeysOnSetupMode.enable ''
+      ${mkIf cfg.enrollKeysOnSetupMode.enable ''
         if [ "$(${pkgs.sbctl}/bin/sbctl status --json | ${pkgs.jq}/bin/jq -r '.setup_mode')" = "true" ]; then
-                  ${pkgs.sbctl}/bin/sbctl enroll-keys ${mkIf opts.enrollKeysOnSetupMode.includeMicrosoftKeys "-m"}
+                  ${pkgs.sbctl}/bin/sbctl enroll-keys ${mkIf cfg.enrollKeysOnSetupMode.includeMicrosoftKeys "-m"}
                 fi''}
       ${pkgs.sbctl}/bin/sbctl verify --json | \
       ${pkgs.jq}/bin/jq -r '.[] | select(.is_signed == 0 ${mkIf cfg.excludeMicrosoftPaths ''and (.file_name | test("Microsoft/Boot") | not)''}) | .file_name' | \

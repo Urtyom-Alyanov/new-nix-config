@@ -1,7 +1,7 @@
 {
+  inputs,
   lib,
   flake,
-  inputs,
 }:
 let
   availableArchitectures = lib.getAvailableArchitectures "${flake.configuration.path}/machines";
@@ -17,7 +17,7 @@ let
         let
           configPath = "${archDir}/${machine}/default.nix";
         in
-        if lib.pathExists configPath then
+        if builtins.pathExists configPath then
           [
             {
               name = "${machine}.${arch}";
@@ -28,15 +28,12 @@ let
                     machinePath = "${archDir}/${machine}";
                   };
                 in
-                config
-                // {
-                  system = arch;
-                }
+                config // { system = arch; }
               );
             }
           ]
         else
-          lib.throw "No configuration found for machine '${machine}' on architecture '${arch}' (expected at: ${configPath})";
+          lib.throw "No configuration found for machine \"${machine}\" on architecture \"${arch}\" (expeted at: ${configPath})";
     in
     builtins.concatLists (map buildMachine machines);
 

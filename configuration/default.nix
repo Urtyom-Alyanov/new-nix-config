@@ -1,8 +1,12 @@
-{ }:
 {
-  path = ./.;
   system = {
+    timeZone = "Europe/Moscow";
     stateVersion = "25.11";
-    timezone = "Europe/Moscow";
+    homes = [
+      {
+        name = "artemos";
+
+      }
+    ];
   };
 }
